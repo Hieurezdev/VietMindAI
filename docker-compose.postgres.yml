@@ -3,7 +3,7 @@ version: '3.8'
 services:
   postgres:
     image: timescale/timescaledb:latest-pg16
-    container_name: mindai-postgres
+    container_name: vietmindai-postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: mindai_adk
@@ -20,7 +20,7 @@ services:
       # Backup directory
       - ./docker/postgres/backups:/backups
     networks:
-      - mindai-network
+      - vietmindai-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U mindai_user -d mindai_adk"]
       interval: 30s
@@ -31,10 +31,10 @@ services:
   # Optional: pgAdmin for database management
   pgadmin:
     image: dpage/pgadmin4:latest
-    container_name: mindai-pgadmin
+    container_name: vietmindai-pgadmin
     restart: unless-stopped
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@mindai.com
+      PGADMIN_DEFAULT_EMAIL: admin@vietmindai.com
       PGADMIN_DEFAULT_PASSWORD: admin123
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     ports:
@@ -42,7 +42,7 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     networks:
-      - mindai-network
+      - vietmindai-network
     depends_on:
       postgres:
         condition: service_healthy
@@ -54,5 +54,5 @@ volumes:
     driver: local
 
 networks:
-  mindai-network:
+  vietmindai-network:
     driver: bridge

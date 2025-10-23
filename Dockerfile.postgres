@@ -1,4 +1,4 @@
-# PostgreSQL Dockerfile for MindAI-ADK with pgvectorscale
+# PostgreSQL Dockerfile for vietmindai-ADK with pgvectorscale
 FROM postgres:16
 
 # Set environment variables

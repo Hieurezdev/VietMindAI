@@ -1,4 +1,4 @@
--- Initialize MindAI-ADK Database with pgvectorscale
+-- Initialize vietmindai-ADK Database with pgvectorscale
 -- This script runs automatically when the container starts for the first time
 
 -- Create extensions
@@ -82,7 +82,7 @@ GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA agents TO mindai_user;
 -- Log successful initialization
 DO $$
 BEGIN
-    RAISE NOTICE 'MindAI-ADK database initialized successfully with pgvectorscale!';
+    RAISE NOTICE 'vietmindai-ADK database initialized successfully with pgvectorscale!';
     RAISE NOTICE 'Available extensions: vector, vectorscale, uuid-ossp, pgcrypto';
     RAISE NOTICE 'Created schemas: ai_data, embeddings, agents';
 END $$;

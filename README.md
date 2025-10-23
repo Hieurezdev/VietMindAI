@@ -2,11 +2,11 @@
 
 🧠 **AI-Powered Mental Health Assistant** using hierarchical agentic architecture
 
-Built with Google's ADK (Agent Development Kit), FastAPI, and Gemini 2.5 Flash for providing empathetic, intelligent mental health support with safety-first crisis detection.
-
+- Built with Google's ADK (Agent Development Kit), FastAPI, and Gemini 2.5 Flash for providing empathetic, intelligent mental health support with safety-first crisis detection.
+- Project Structure: from [himlamtech](https://github.com/Himlamtech/Project-Template)
 ## 🎯 Overview
 
-MindAI-ADK is a sophisticated mental health AI assistant that uses a **hierarchical multi-agent system** to provide:
+VietMindAI-ADK is a sophisticated mental health AI assistant that uses a **hierarchical multi-agent system** to provide:
 
 - ✅ **Crisis Detection & Intervention**: Automatic detection and handling of mental health emergencies
 - ✅ **Empathetic Conversations**: Context-aware, supportive dialogue for mental wellness
@@ -54,7 +54,7 @@ exec $SHELL
 
 # Clone and setup project
 git clone <your-repo>
-cd MindAI-ADK
+cd VietMindAI-ADK
 
 # Install dependencies and setup hooks
 make setup
