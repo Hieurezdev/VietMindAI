@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: timescale/timescaledb:latest-pg16
+    container_name: mindai-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: mindai_adk
+      POSTGRES_USER: mindai_user
+      POSTGRES_PASSWORD: mindai_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      # Persistent data storage
+      - postgres_data:/var/lib/postgresql/data
+      # Initialization scripts
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+      # Backup directory
+      - ./docker/postgres/backups:/backups
+    networks:
+      - mindai-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mindai_user -d mindai_adk"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Optional: pgAdmin for database management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: mindai-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@mindai.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - mindai-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  mindai-network:
+    driver: bridge

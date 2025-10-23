@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "testgen"
 version = "1.0.0"
 description = "AI-powered test case generation system with clean architecture"
-authors = [{ name = "HbLab TestGen" }]
+authors = [{ name = "HieuDev" }]
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.12"
@@ -43,6 +43,13 @@ dependencies = [
   "numpy>=1.26",
   "scikit-learn>=1.3.0",
   "blake3>=1.0.5",
+  "pre-commit>=4.3.0",
+  "sqlalchemy[asyncio]>=2.0.43",
+  "alembic>=1.16.5",
+  "psycopg[binary]>=3.2.10",
+  "asyncpg>=0.30.0",
+  "google-adk>=1.14.0",
+  "python-dotenv>=1.1.1",
 ]
 
 [project.optional-dependencies]

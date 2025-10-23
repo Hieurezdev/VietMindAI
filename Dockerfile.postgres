@@ -1,0 +1,65 @@
+# PostgreSQL Dockerfile for MindAI-ADK with pgvectorscale
+FROM postgres:16
+
+# Set environment variables
+ENV POSTGRES_DB=mindai_adk
+ENV POSTGRES_USER=mindai_user
+ENV POSTGRES_PASSWORD=mindai_password
+ENV PGDATA=/var/lib/postgresql/data/pgdata
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    git \
+    curl \
+    clang \
+    pkg-config \
+    postgresql-server-dev-16 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Rust (required for pgvectorscale)
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# Install pgvector first (dependency for pgvectorscale)
+RUN cd /tmp && \
+    git clone --branch v0.7.4 https://github.com/pgvector/pgvector.git && \
+    cd pgvector && \
+    make && \
+    make install && \
+    cd .. && rm -rf pgvector
+
+# Install cargo-pgrx and pgvectorscale
+RUN cargo install --locked cargo-pgrx --version 0.11.3 && \
+    cd /tmp && \
+    git clone --branch 0.4.0 https://github.com/timescale/pgvectorscale.git && \
+    cd pgvectorscale && \
+    cargo pgrx init --pg16 /usr/bin/pg_config && \
+    cargo pgrx package && \
+    cp target/release/pgvectorscale-pg16/usr/lib/postgresql/16/lib/pgvectorscale.so /usr/lib/postgresql/16/lib/ && \
+    cp target/release/pgvectorscale-pg16/usr/share/postgresql/16/extension/vectorscale* /usr/share/postgresql/16/extension/ && \
+    cd .. && rm -rf pgvectorscale
+
+# Clean up
+RUN apt-get remove -y build-essential git curl clang pkg-config && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /root/.cargo
+
+# Create directory for initialization scripts
+RUN mkdir -p /docker-entrypoint-initdb.d
+
+# Copy initialization scripts
+COPY docker/postgres/init/ /docker-entrypoint-initdb.d/
+
+# Set proper permissions
+RUN chmod -R 755 /docker-entrypoint-initdb.d
+
+# Expose PostgreSQL port
+EXPOSE 5432
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD pg_isready -U $POSTGRES_USER -d $POSTGRES_DB || exit 1
+
+# Use the default PostgreSQL entrypoint
+CMD ["postgres"]
