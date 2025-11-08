@@ -1,5 +1,6 @@
-from functools import lru_cache
 import os
+from functools import lru_cache
+
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
@@ -10,14 +11,31 @@ class Settings(BaseSettings):
     log_level: str = os.getenv("LOG_LEVEL", "INFO")
 
     # LLM / Embeddings
+    # OpenAI API key, required for OpenAI models
     openai_api_key: str | None = None
-    gemini_api_key: str = os.getenv("GEMINI_API_KEY")
+    # Hugging Face API key, required for Hugging Face models
+    huggingface_api_key: str | None = None
+    # Google Gemini API key, required for Gemini models
+    gemini_api_key: str = Field(default_factory=lambda: os.getenv("GOOGLE_API_KEY", ""))
+    # Models
     openai_model: str = "gpt-4o-mini"
-    gemini_model: str = "gemini-2.5-flash"
-    rag_model: str = "gemini-2.5-flash"
-    
+    thinking_gemini_model: str = "gemini-2.5-pro"
+    general_gemini_model: str = "gemini-2.5-flash"
+    embedding_model: str = "gemini-embedding-001"
+
+    # Default gemini model for agents (backward compatibility)
+    @property
+    def gemini_model(self) -> str:
+        """Default Gemini model for agents (uses general model)."""
+        return self.general_gemini_model
+
+    @property
+    def rag_model(self) -> str:
+        """RAG model (uses general model for speed)."""
+        return self.general_gemini_model
+
     # DB
-    database_url: str | None = None  # e.g., postgres+psycopg://user:pass@host/db
+    database_url: str | None = None  # e.g., postgresql+asyncpg://user:pass@host:5432/db
 
     model_config = {"env_file": ".env", "extra": "ignore"}
 
