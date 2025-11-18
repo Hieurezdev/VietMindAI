@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   postgres:
-    image: timescale/timescaledb:latest-pg16
+    image: pgvector/pgvector:pg16
     container_name: vietmindai-postgres
     restart: unless-stopped
     environment:
@@ -11,7 +11,7 @@ services:
       POSTGRES_PASSWORD: mindai_password
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-      - "5432:5432"
+      - "5433:5432"  # Changed host port to 5433
     volumes:
       # Persistent data storage
       - postgres_data:/var/lib/postgresql/data
@@ -34,7 +34,7 @@ services:
     container_name: vietmindai-pgadmin
     restart: unless-stopped
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@vietmindai.com
+      PGADMIN_DEFAULT_EMAIL: admin1@vietmindai.com
       PGADMIN_DEFAULT_PASSWORD: admin123
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     ports:

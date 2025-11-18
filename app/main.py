@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.api.routers import chat, health, v1
+from app.api.routers import chat, health, memory, v1, vector
 from app.config.config import Settings
 from app.config.logging import configure_logging
 
@@ -20,6 +20,8 @@ def create_app() -> FastAPI:
     # Routers
     app.include_router(health.router, prefix="/health", tags=["health"])
     app.include_router(chat.router, prefix="/api/v1/chat", tags=["chat"])
+    app.include_router(memory.router, prefix="/api/v1", tags=["memory"])
+    app.include_router(vector.router, prefix="/api/v1", tags=["vector"])
     app.include_router(v1.router, prefix="/v1", tags=["v1"])
 
     return app

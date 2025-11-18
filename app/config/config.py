@@ -37,6 +37,10 @@ class Settings(BaseSettings):
     # DB
     database_url: str | None = None  # e.g., postgresql+asyncpg://user:pass@host:5432/db
 
+    # Memory System
+    stm_consolidation_threshold: int = 15  # Number of STM before auto-consolidation
+    stm_max_threshold: int = 20  # Maximum STM before forced consolidation
+
     model_config = {"env_file": ".env", "extra": "ignore"}
 
 

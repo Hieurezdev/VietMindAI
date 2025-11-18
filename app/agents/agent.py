@@ -5,11 +5,7 @@ from .sub_agents.general_agent.agent import general_agent
 from .sub_agents.crisis_detection_agent.agent import crisis_detection_agent
 from dotenv import load_dotenv
 
-
-
 load_dotenv()
-
-
 
 root_agent = Agent(
     name = "root_agent",
